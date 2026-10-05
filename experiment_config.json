@@ -1,0 +1,88 @@
+{
+  "status": "proposed_protocol_not_executed",
+  "prepared_date": "2026-10-05",
+  "primary_dataset": "MOCHEG_author_release",
+  "fallback_text_dataset": "AVeriTeC",
+  "primary_task": "claim_verification",
+  "fit_labels_allowed": false,
+  "fit_all_original_verdict_categories": true,
+  "binary_evaluation_contrast": ["supported", "refuted"],
+  "raw_label_mapping_requires_release_audit": true,
+  "seeds": [13, 29, 47, 71, 101],
+  "encoder": {
+    "primary": "sentence-transformers/all-mpnet-base-v2",
+    "replication": "sentence-transformers/all-MiniLM-L6-v2",
+    "resolved_revision": null,
+    "frozen": true,
+    "batch_size_initial": 32,
+    "normalize_embeddings": true
+  },
+  "topic_model": {
+    "features": "training_only_tfidf_claim_text",
+    "algorithm": "kmeans",
+    "primary_count": 8,
+    "sensitivity_counts": [4, 12]
+  },
+  "topic_removal": {
+    "primary": "fixed_between_topic_centroid_subspace_projection",
+    "primary_rank": 2,
+    "sensitivity_ranks": [0, 1, 4],
+    "test_batch_centroid_adaptation_in_primary": false
+  },
+  "residual_pca_dimensions": 32,
+  "shared_axis": {
+    "estimator": "leading_eigenvector_of_mean_unlabeled_topic_gmm_direction_outer_products",
+    "topic_gmm_components": [1, 2],
+    "covariance_type": "diag",
+    "reg_covar": 0.00001,
+    "n_init": 10,
+    "minimum_topic_records": 200,
+    "minimum_component_mass": 0.1,
+    "require_bic_1_minus_bic_2_positive": true,
+    "minimum_valid_topic_directions": 3,
+    "topic_weighting": "equal",
+    "failure_result": "no_shared_axis_found"
+  },
+  "graph": {
+    "neighbor_counts": [10, 20, 40],
+    "symmetrization": "union",
+    "distance_weights": "euclidean_chord_on_normalized_raw_embeddings_or_euclidean_on_residual_pca",
+    "landmarks": 128,
+    "all_pairs_shortest_paths": false,
+    "test_graph_fit_in_primary": false
+  },
+  "local_subspace": {
+    "neighbor_counts": [20, 40, 80],
+    "ranks": [2, 4, 8],
+    "exclude_compared_endpoint": true,
+    "pair_matching": ["topic", "euclidean_distance", "claim_length", "source_if_available", "date_if_available"]
+  },
+  "evidence": {
+    "primary_top_k": 5,
+    "retrieval_recall_k": [5, 10],
+    "separate_gold_and_retrieved_conditions": true,
+    "exclude_verdict_ruling_and_justification_fields": true,
+    "nli_transfer_track_separate": true
+  },
+  "multimodal": {
+    "encoder_candidate": "openai/clip-vit-base-patch32",
+    "resolved_revision": null,
+    "same_record_ids_across_modality_comparisons": true,
+    "ocr_separate_condition": true,
+    "subtract_only_vectors_in_same_embedding_space": true,
+    "external_benchmark": "VERITE_separate_image_caption_context_task"
+  },
+  "evaluation": {
+    "primary_clustering_metric": "adjusted_rand_index",
+    "axis_association_metric": "max_auc_and_one_minus_auc",
+    "orientation_maximization_in_every_null_permutation": true,
+    "bootstrap_unit": "claim_event_group",
+    "bootstrap_replicates": 1000,
+    "conditional_permutations": 1000,
+    "confidence_level": 0.95,
+    "multiple_primary_test_correction": "Holm",
+    "practical_improvement_target_auc": 0.03,
+    "label_based_hyperparameter_selection_in_primary": false,
+    "test_label_based_semantic_orientation": false
+  }
+}

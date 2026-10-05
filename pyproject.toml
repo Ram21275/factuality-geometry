@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "factuality-geometry"
+version = "0.1.0"
+description = "Resumable, label-isolated experiments on factuality representation geometry"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.26,<3", "pandas>=2.1,<4", "scipy>=1.11,<2", "scikit-learn>=1.4,<2", "joblib>=1.3,<2", "pyarrow>=14"]
+
+[project.optional-dependencies]
+encoders = ["sentence-transformers>=3,<6", "transformers>=4.45,<6", "torch>=2.2", "Pillow>=10", "huggingface-hub>=0.25,<2"]
+test = ["pytest>=8,<10", "Pillow>=10"]
+
+[project.scripts]
+fgeometry = "fgeometry.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["fgeometry*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

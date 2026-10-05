@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+data/
+runs/
+snapshots/
+*.tar.gz
+*.npy
+*.npz
+*.parquet
+*.joblib
+.env
+.env.*
+kaggle.json
+test_outputs/
